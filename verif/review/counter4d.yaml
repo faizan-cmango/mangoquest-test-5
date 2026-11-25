@@ -1,0 +1,3 @@
+block: counter4d
+findings:
+  - {rule: DAYO-TBS-051, status: pass, finding: "no IDD signal is marked cdc and clocks.yaml has no crossing, so no synchroniser latency is drawn", location: "verif/test_counter4d.py:1"}

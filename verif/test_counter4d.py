@@ -7,12 +7,12 @@
 # Author:        Dayo
 # PURPOSE:       One directed test per VPS scenario and one seeded random test; a monitor
 #                feeds every rising edge to a scoreboard built on a model of REQ-3.1.1 to
-#                REQ-3.1.6. SKELETON: bodies are filled in at verify_block, once RTL is accepted.
+#                REQ-3.1.6, and the scoreboard samples the covergroups.
 # DEBUG NOTES:   Read the first MISMATCH line. Add to the waveform, in order: rst_n, en, count.
 # KNOWN GOTCHAS: Clock starts low; inputs change only after a falling edge (R1 of IDD-COUNT_IF),
 #                never in a rising-edge timestep. Reset is synchronous: it needs a rising edge.
 #                The same harness later runs unchanged on the gate-level netlist.
-"""cocotb harness skeleton for counter4d."""
+"""cocotb harness for counter4d."""
 
 import logging
 import random
@@ -28,6 +28,10 @@ from cocotb_coverage.coverage import CoverPoint, coverage_db
 CLK_PERIOD_NS = 10  # clocks.yaml: clk at 100 MHz
 RESET_EDGES = 2  # clocks.yaml rst_n is synchronous (REQ-3.1.1): held 0 for 2 rising edges
 COUNT_MAX = 15  # REQ-3.1.3: the value that wraps to 0
+RANDOM_EDGES = 600  # REQ-3.1.2 REQ-3.1.4 (VPS-03): random run length, many wraps
+PERCENT = 100  # REQ-3.1.5 (VPS-05): constraint_model odds are percentages
+EN_ONE_PCT = 67  # testplan constraint_model: en 1 about 2 edges in 3
+RST_ZERO_PCT = 8  # testplan constraint_model: rst_n 0 about 1 edge in 12
 LOG = logging.getLogger("test_counter4d")
 
 
@@ -105,7 +109,7 @@ class CountReset:
 class CountEnv:
     """One test's harness: components, model, coverage, one seed."""
 
-    def __init__(self, dut, test: str) -> None:
+    def __init__(self, dut, test: str, vps: str, req: str) -> None:
         self.seed = cocotb.RANDOM_SEED
         self.rng = random.Random(self.seed)
         LOG.info("SEED=%d test=%s harness=test_counter4d dut=counter4d", self.seed, test)
@@ -113,7 +117,7 @@ class CountEnv:
         self.test = test
         self.driver = CountDriver(dut)
         self.reset = CountReset(dut)
-        self.scoreboard = CountScoreboard(test, self.seed)
+        self.scoreboard = CountScoreboard(test, self.seed, vps, req)
         self.monitor = CountMonitor(dut, self.scoreboard.observe)
 
     async def start(self) -> None:
@@ -122,53 +126,95 @@ class CountEnv:
         cocotb.start_soon(self.monitor.run())
         await self.reset.release()
 
+    async def step(self, rst_n: int, en: int) -> None:
+        """One input pair at a falling edge; count must not move before the rising edge."""
+        await FallingEdge(self.dut.clk)
+        got = count_read(self.dut.count, "count")
+        exp = self.scoreboard.model.count_exp
+        if got != exp:
+            raise AssertionError(
+                f"MISMATCH {self.scoreboard.vps} REQ-3.1.6 signal=count_off_edge "
+                f"expected={exp} observed={got} test={self.test} seed={self.seed}"
+            )
+        self.dut.rst_n.value = rst_n
+        self.dut.en.value = en
+
+    async def steps(self, n: int, rst_n: int, en: int) -> None:
+        for _ in range(n):
+            await self.step(rst_n, en)
+
+    async def finish(self) -> None:
+        await RisingEdge(self.dut.clk)
+        await FallingEdge(self.dut.clk)
+        assert self.scoreboard.edges > 0, "no edge was checked"
+        count_cov_export()
+
 
 @cocotb.test(timeout_time=20, timeout_unit="us")
 async def test_vps_01_reset(dut) -> None:
     """VPS-01: reset from zero at power-up, and from a nonzero count."""
-    env = CountEnv(dut, "test_vps_01_reset")
+    env = CountEnv(dut, "test_vps_01_reset", "VPS-01", "REQ-3.1.1")
     await env.start()
-    # TODO verify_block: count up with en 1, drive rst_n 0, check count 0 after the edge and while low.
+    await env.steps(2, 0, 0)  # reset from zero
+    await env.steps(6, 1, 1)  # count up to a nonzero value
+    await env.steps(3, 0, 1)  # reset: 0 after the edge and while low
+    await env.steps(2, 1, 1)
+    await env.steps(2, 0, 0)
+    await env.finish()
 
 
 @cocotb.test(timeout_time=20, timeout_unit="us")
 async def test_vps_02_hold(dut) -> None:
     """VPS-02: en 0 for several cycles at a nonzero count."""
-    env = CountEnv(dut, "test_vps_02_hold")
+    env = CountEnv(dut, "test_vps_02_hold", "VPS-02", "REQ-3.1.4")
     await env.start()
-    # TODO verify_block: reach a nonzero count, en 0 for several edges, count unchanged.
+    await env.steps(5, 1, 1)
+    await env.steps(6, 1, 0)
+    await env.steps(2, 1, 1)
+    await env.steps(3, 1, 0)
+    await env.finish()
 
 
 @cocotb.test(timeout_time=20, timeout_unit="us")
 async def test_vps_03_increment(dut) -> None:
     """VPS-03: en 1 for several cycles after reset."""
-    env = CountEnv(dut, "test_vps_03_increment")
+    env = CountEnv(dut, "test_vps_03_increment", "VPS-03", "REQ-3.1.2")
     await env.start()
-    # TODO verify_block: en 1, count rises by 1 each edge and changes only at an edge.
+    await env.steps(8, 1, 1)
+    await env.finish()
 
 
 @cocotb.test(timeout_time=20, timeout_unit="us")
 async def test_vps_04_wrap(dut) -> None:
     """VPS-04: en 1 from count 0 through 16 edges."""
-    env = CountEnv(dut, "test_vps_04_wrap")
+    env = CountEnv(dut, "test_vps_04_wrap", "VPS-04", "REQ-3.1.3")
     await env.start()
-    # TODO verify_block: 16 edges with en 1, count goes 15 to 0.
+    await env.steps(18, 1, 1)
+    await env.finish()
 
 
 @cocotb.test(timeout_time=20, timeout_unit="us")
 async def test_vps_05_reset_priority(dut) -> None:
     """VPS-05: rst_n 0 with en 1 at a nonzero count."""
-    env = CountEnv(dut, "test_vps_05_reset_priority")
+    env = CountEnv(dut, "test_vps_05_reset_priority", "VPS-05", "REQ-3.1.5")
     await env.start()
-    # TODO verify_block: rst_n 0 and en 1 together, count 0 and stays 0 while rst_n is 0.
+    await env.steps(7, 1, 1)
+    await env.steps(4, 0, 1)
+    await env.steps(3, 1, 1)
+    await env.steps(1, 0, 1)
+    await env.finish()
 
 
 @cocotb.test(timeout_time=100, timeout_unit="us")
 async def test_random_seeded(dut) -> None:
     """Constrained-random en and rst_n from the testplan's constraint model, one seed."""
-    env = CountEnv(dut, "test_random_seeded")
+    env = CountEnv(dut, "test_random_seeded", "VPS-03", "REQ-3.1.2")
     await env.start()
-    # TODO verify_block: a few hundred falling edges drawn from env.rng.
+    for _ in range(RANDOM_EDGES):
+        rst_n = 0 if env.rng.randrange(PERCENT) < RST_ZERO_PCT else 1
+        en = 1 if env.rng.randrange(PERCENT) < EN_ONE_PCT else 0
+        await env.step(rst_n, en)
+    await env.finish()
 
 
 # ==== D. Reference model and scoreboard ===========================================
@@ -198,22 +244,30 @@ class CountMatch:
 class CountScoreboard:
     """Compares every edge with the model: one MISMATCH line per difference (DAYO-TBS-032)."""
 
-    def __init__(self, test: str, seed: int) -> None:
+    def __init__(self, test: str, seed: int, vps: str, req: str) -> None:
         self.test = test
         self.seed = seed
+        self.vps = vps
+        self.req = req
         self.model = CountModel()
         self.count_before = 0
+        self.edges = 0
         self.listeners: list[Callable[[CountMatch], None]] = []
 
     def observe(self, sample: CountSample) -> None:
+        before = self.model.count_exp
         expected = self.model.apply(sample.rst_n, sample.en)
         if sample.count != expected:
             raise AssertionError(
-                f"MISMATCH VPS-00 REQ-3.1.2 signal=count expected={expected} "
+                f"MISMATCH {self.vps} {self.req} signal=count expected={expected} "
                 f"observed={sample.count} test={self.test} seed={self.seed}"
             )
+        self.edges += 1
+        match = CountMatch(self.vps, before, sample)
+        for vps, group in COUNT_COVERGROUPS.items():
+            if COUNT_FILTERS[vps](sample):
+                group(match)
         self.count_before = sample.count
-        # TODO verify_block: classify the edge into a VPS and call the listeners.
 
 
 # ==== E. Coverage model ===========================================================
@@ -260,6 +314,15 @@ COUNT_COVERGROUPS: dict[str, Callable[[CountMatch], None]] = {
     "VPS-03": cg_vps_03,
     "VPS-04": cg_vps_04,
     "VPS-05": cg_vps_05,
+}
+
+# Which edges each scenario samples (the scenario's intent).
+COUNT_FILTERS: dict[str, Callable[[CountSample], bool]] = {
+    "VPS-01": lambda s: s.rst_n == 0,
+    "VPS-02": lambda s: s.rst_n == 1 and s.en == 0,
+    "VPS-03": lambda s: s.rst_n == 1 and s.en == 1,
+    "VPS-04": lambda s: s.rst_n == 1 and s.en == 1,
+    "VPS-05": lambda s: s.rst_n == 0 and s.en == 1,
 }
 
 
