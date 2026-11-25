@@ -1,0 +1,37 @@
+decisions:
+  - id: ADR-01
+    date: 2026-11-25
+    status: proposed
+    title: "Plain pins described in one IDD of protocol class level"
+    req_ids: [REQ-3.1.1, REQ-3.1.2]
+    context: "The brief has no bus; every block needs an interface definition."
+    alternatives: ["One IDD, class level", "No IDD"]
+    decision: "One IDD, idd/count_if.yaml, class level, no omitted signals."
+    decided_by: {actor_ref: faizan@chipmango.com, role: adr}
+  - id: ADR-02
+    date: 2026-11-25
+    status: proposed
+    title: "No area or power target"
+    req_ids: [REQ-3.1.6]
+    context: "The brief gives no area budget."
+    alternatives: ["Invent a budget", "not_applicable"]
+    decision: "area_budget is not_applicable; frequency (100 MHz) is the only target."
+    decided_by: {actor_ref: faizan@chipmango.com, role: adr}
+  - id: ADR-03
+    date: 2026-11-25
+    status: proposed
+    title: "DFT recorded as scan notes, not a document"
+    req_ids: [REQ-3.1.1]
+    context: "Full scan, one chain, mux-D, stuck-at and transition, platform default coverage; scan ports added by insertion."
+    alternatives: ["dft document", "scan_notes plus this ADR"]
+    decision: "optional_documents.dft is not_applicable; scan_notes and this ADR carry the intent for Tola."
+    decided_by: {actor_ref: faizan@chipmango.com, role: adr}
+  - id: ADR-04
+    date: 2026-11-25
+    status: proposed
+    title: "Board currents and the 1.8 V regulator gap"
+    req_ids: [REQ-3.1.6]
+    context: "Brief gives rails and voltages, not currents; the board standard has only a 3.3 V LDO."
+    alternatives: ["Ask the person", "Simple defaults and a named gap"]
+    decision: "Rail currents of 100 mA (VBUS, VBUS_F, +5V) and 50 mA (VDD_1V8) as generous upper bounds for a 4-bit counter plus LEDs-free headers; 1.8 V LDO model is supplied by a person (BRS-9)."
+    decided_by: {actor_ref: faizan@chipmango.com, role: adr}

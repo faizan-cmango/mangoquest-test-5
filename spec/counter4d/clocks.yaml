@@ -1,0 +1,9 @@
+strategy: >-
+  One domain, clk at 100 MHz (10 ns) from a pin. rst_n is active low, synchronous, applied and released at clk edges; no crossings.
+clocks:
+  - {name: clk, freq_mhz: 100, source: pin, domain: core}
+resets:
+  - {name: rst_n, domain: core, style: sync, polarity: active_low, assert: synchronous, deassert: synchronous, sync_clock: clk, source: pin}
+cdc: []
+blocks:
+  - {id: counter4d, clock: clk, reset: rst_n, cdc_inputs: []}

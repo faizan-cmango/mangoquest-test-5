@@ -1,0 +1,27 @@
+brs: spec/counter4d/brs.yaml@v0.1
+project: counter4d
+sad_version: "0.1"
+board: counter4d_eval
+requirements:
+  - {id: BRS-1, text: "The board shall take 5 V from a header on rail VBUS and pass it through a fuse (rail VBUS_F) and a reverse-protection diode (rail +5V).", category: power, req_ids: [REQ-3.1.6], verif_method: inspection}
+  - {id: BRS-2, text: "The board shall supply the chip core and pins at 1.8 V from a 1.8 V LDO (rail VDD_1V8) fed from +5V.", category: power, req_ids: [REQ-3.1.6], verif_method: inspection}
+  - {id: BRS-3, text: "The board shall provide headers at 1.8 V logic for clk, rst_n, en, count[3:0] and the scan pins scan_in, scan_en and scan_out.", category: interface, req_ids: [REQ-3.1.1, REQ-3.1.2], verif_method: inspection}
+  - {id: BRS-4, text: "The board shall provide test points on clk and count[3:0].", category: test, req_ids: [REQ-3.1.6, REQ-3.1.2], verif_method: inspection}
+  - {id: BRS-5, text: "The board shall be a 2-layer board of fabrication class jlc-2l-standard.", category: mechanical, req_ids: [REQ-3.1.6], verif_method: inspection}
+  - {id: BRS-6, text: "The board shall provide decoupling on VDD_1V8 at the chip.", category: power, req_ids: [REQ-3.1.6], verif_method: inspection}
+  - {id: BRS-7, text: "The board shall have no firmware consumer.", category: other, req_ids: [REQ-3.1.6], verif_method: review}
+  - {id: BRS-8, text: "The board shall be built with the clk input able to take 100 MHz.", category: interface, req_ids: [REQ-3.1.6], verif_method: analysis}
+  - {id: BRS-9, text: "The 1.8 V LDO is not in the board standard, and the chip has no Device Model yet: both Device Models and the parts snapshot are supplied by a person at board/counter4d_eval/.", category: other, req_ids: [REQ-3.1.6], verif_method: review}
+interfaces:
+  - {name: count_pins, kind: header, connector: "2.54 mm header, 1.8 V logic", signals: [clk, rst_n, en, "count[3:0]", scan_in, scan_en, scan_out], idd: IDD-COUNT_IF}
+  - {name: vbus_in, kind: power, connector: "2.54 mm header, 5 V", signals: [VBUS], idd: IDD-COUNT_IF}
+power_rails:
+  - {name: VBUS, voltage_v: 5.0, current_ma: 100, tolerance_pct: 5}
+  - {name: VBUS_F, voltage_v: 5.0, current_ma: 100, tolerance_pct: 5}
+  - {name: +5V, voltage_v: 4.7, current_ma: 100, tolerance_pct: 5}
+  - {name: VDD_1V8, voltage_v: 1.8, current_ma: 50, tolerance_pct: 5}
+environment: {ambient_min_c: 0, ambient_max_c: 70, bus_voltage_min_v: 4.75, bus_voltage_max_v: 5.25}
+constraints: {header_spacing_mm: 2.54, assembly: "hand or JLC economic assembly"}
+firmware_consumer: none
+mechanical: {layers: 2}
+fab_class: jlc-2l-standard
