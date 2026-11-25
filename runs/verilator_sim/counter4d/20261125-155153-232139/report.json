@@ -1,0 +1,57 @@
+{
+  "kind": "sim",
+  "schema_version": 2,
+  "tool": "verilator_sim",
+  "block": "counter4d",
+  "inputs": [
+    {
+      "path": "rtl/counter4d.sv",
+      "version": 1,
+      "sha256": "sha256:9eaf39fe6168eb1f0c4506224b6b75b889e89c1e2b673d310f45a75cc16df388"
+    },
+    {
+      "path": "tb/tb_counter4d.sv",
+      "version": 1,
+      "sha256": "sha256:702f27f186d3050d5713b55187199529d73e4f7acfc4a70ca0e44bb8698f008e"
+    }
+  ],
+  "timed_out": false,
+  "stopped": "",
+  "image": "quest-eda-tools:2026.11.1",
+  "tool_version": "",
+  "simulator": "verilator",
+  "testbench": "tb_counter4d",
+  "compiled": true,
+  "compile_errors": [],
+  "compile_warning_count": 0,
+  "compile_failure": "",
+  "finished": true,
+  "end_time": "415ns",
+  "passed": false,
+  "first_failure": {
+    "cycle": 26,
+    "signal": "count_pre_hold",
+    "expected": "5",
+    "actual": "6",
+    "error": null,
+    "time": null,
+    "fields": {}
+  },
+  "mismatches": 2,
+  "assertion_errors": 0,
+  "errors": [],
+  "assertion_failures": 0,
+  "coverage": null,
+  "seed": 1847601331,
+  "framework": "sv",
+  "test_module": "",
+  "toplevel": "",
+  "seeds": [],
+  "functional_groups": [],
+  "fsms": [],
+  "fsm_source": "",
+  "fsm_note": "",
+  "simulator_version": "",
+  "reproduction": false,
+  "closure": null
+}

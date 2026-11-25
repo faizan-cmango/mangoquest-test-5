@@ -1,0 +1,46 @@
+{
+  "kind": "synth",
+  "schema_version": 1,
+  "tool": "yosys_synth",
+  "block": "counter4d",
+  "inputs": [
+    {
+      "path": "rtl/counter4d.sv",
+      "version": 1,
+      "sha256": "sha256:9eaf39fe6168eb1f0c4506224b6b75b889e89c1e2b673d310f45a75cc16df388"
+    },
+    {
+      "path": "rtl/counter4d.sdc",
+      "version": 1,
+      "sha256": "sha256:22ca2984d4f69248ffa2565427935903bd347c66f238917b99ab5838705375a8"
+    }
+  ],
+  "timed_out": false,
+  "stopped": "",
+  "image": "quest-eda-tools:2026.11.1",
+  "tool_version": "",
+  "top": "counter4d",
+  "ok": true,
+  "errors": [],
+  "error_count": 0,
+  "warning_count": 0,
+  "cell_count": 14,
+  "cells_by_type": {
+    "sky130_fd_sc_hd__a21oi_1": 3,
+    "sky130_fd_sc_hd__and3_1": 1,
+    "sky130_fd_sc_hd__and4_1": 1,
+    "sky130_fd_sc_hd__dfxtp_1": 4,
+    "sky130_fd_sc_hd__nor2_1": 1,
+    "sky130_fd_sc_hd__nor3b_1": 1,
+    "sky130_fd_sc_hd__o21ai_0": 3
+  },
+  "latches": [],
+  "latch_cells": 0,
+  "area": 136.3808,
+  "timing": {
+    "wns": 7.5581,
+    "tns": 0.0,
+    "period": 10.0
+  },
+  "liberty": "sky130_fd_sc_hd__tt_025C_1v80"
+}
