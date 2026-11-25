@@ -1,0 +1,645 @@
+kind: vss
+block: counter4d
+signoff_level: oss
+ready: true
+rtm:
+  file: spec/counter4d/rtm.yaml
+  merged: false
+  pending:
+  - req_id: REQ-3.1.1
+    sheet: true
+    rtm: null
+  - req_id: REQ-3.1.2
+    sheet: true
+    rtm: null
+  - req_id: REQ-3.1.3
+    sheet: true
+    rtm: null
+  - req_id: REQ-3.1.4
+    sheet: true
+    rtm: null
+  - req_id: REQ-3.1.5
+    sheet: true
+    rtm: null
+  - req_id: REQ-3.1.6
+    sheet: true
+    rtm: null
+  conflicts: []
+  note: 'the RTM still needs merging: spec/counter4d/rtm.yaml does not yet hold this
+    sheet''s verified_status for REQ-3.1.1, REQ-3.1.2, REQ-3.1.3, REQ-3.1.4, REQ-3.1.5,
+    REQ-3.1.6 (its values are in pending): Chidi''s rtm_merge writes them (a dry merge
+    of verif/handoffs/rtm_delta/counter4d.yaml with the workspace''s other RTM deltas
+    finds no conflict for them)'
+risk: LOW
+checks:
+- code: DAYO_001
+  check: defects
+  passed: true
+  reason: every failure is classified as a DefectRecord
+- code: DAYO_004
+  check: closure
+  passed: true
+  reason: closure reached
+- code: DAYO_005
+  check: formal
+  passed: true
+  reason: no formal property is required
+- code: DAYO_006
+  check: open_p1
+  passed: true
+  reason: no open P1, and the RTM delta is the computed one
+- code: DAYO_009
+  check: waivers
+  passed: true
+  reason: every waiver carries its reason, evidence and approver
+self_check:
+  step1_tblint: pass
+  step2_directed: pass
+  step3_closure: pass
+  step4_formal: skipped
+  step5_signoff: pass
+  step6_defects: pass
+self_check_evidence:
+- step: step1_tblint
+  capability: tb_lint
+  tool: tb_lint
+  tool_version: ''
+  recipe: verify-block/tb_lint_rules.yaml
+  report_ref:
+    kind: lint
+    tool: tb_lint
+    block: counter4d
+    path: runs/tb_lint/counter4d/20261125-161253-2ecffa/report.json
+    version: 1
+    file_id: 10ff39ce-658c-4863-8e5d-9fbb6a806cc7
+    stale: false
+  result: pass
+- step: step2_directed
+  capability: cocotb_sim
+  tool: cocotb_sim
+  tool_version: 2.1.0
+  recipe: verify-block
+  report_ref:
+    kind: sim
+    tool: cocotb_sim
+    block: counter4d
+    path: runs/cocotb_sim/counter4d/20261125-161502-5d1d19/report.json
+    version: 1
+    file_id: 8bee0c91-a529-4863-a6ff-e547083b1dcb
+    stale: false
+  result: pass
+- step: step3_closure
+  capability: cocotb_sim
+  tool: cocotb_sim
+  tool_version: 2.1.0
+  recipe: verify-block
+  report_ref:
+    kind: sim
+    tool: cocotb_sim
+    block: counter4d
+    path: runs/cocotb_sim/counter4d/20261125-161502-5d1d19/report.json
+    version: 1
+    file_id: 8bee0c91-a529-4863-a6ff-e547083b1dcb
+    stale: false
+  result: pass
+- step: step4_formal
+  capability: formal_check
+  tool: formal_check
+  tool_version: ''
+  recipe: verify-block
+  report_ref: null
+  result: skipped
+- step: step5_signoff
+  capability: mutate_rtl
+  tool: mutate_rtl
+  tool_version: ''
+  recipe: verify-block
+  report_ref:
+    kind: mutation
+    tool: mutate_rtl
+    block: counter4d
+    path: runs/mutate_rtl/counter4d/20261125-161308-8960e7/report.json
+    version: 1
+    file_id: 158734da-d3cf-444a-8575-48b8dcab4328
+    stale: false
+  result: pass
+- step: step5_signoff
+  capability: cocotb_sim
+  tool: cocotb_sim
+  tool_version: 2.1.0
+  recipe: verify-block
+  report_ref:
+    kind: sim
+    tool: cocotb_sim
+    block: counter4d
+    path: runs/cocotb_sim/counter4d/20261125-161502-5d1d19/report.json
+    version: 1
+    file_id: 8bee0c91-a529-4863-a6ff-e547083b1dcb
+    stale: false
+  result: pass
+- step: step6_defects
+  capability: closure_check
+  tool: closure_check
+  tool_version: ''
+  recipe: verify-block
+  report_ref: null
+  result: pass
+coverage:
+  line:
+    target: 100.0
+    gated: true
+    measured: 100.0
+    hit: 3
+    total: 3
+    waived: 0
+    met: true
+    status: met
+  branch:
+    target: 100.0
+    gated: true
+    measured: 100.0
+    hit: 2
+    total: 2
+    waived: 0
+    met: true
+    status: met
+  toggle:
+    target: 100.0
+    gated: true
+    measured: 100.0
+    hit: 15
+    total: 15
+    waived: 0
+    met: true
+    status: met
+  fsm:
+    target: 100.0
+    gated: true
+    measured: null
+    met: null
+    status: n/a
+    note: 'no state machine in the design (Yosys found none): no FSM target applies'
+  functional:
+    target: 100.0
+    gated: true
+    measured: 100.0
+    hit: 8
+    total: 8
+    waived: 0
+    met: true
+    status: met
+coverage_by_group:
+  cg_vps_01:
+    hit: 2
+    total: 2
+    open: []
+    closed: true
+    planned: true
+    seen: true
+  cg_vps_02:
+    hit: 1
+    total: 1
+    open: []
+    closed: true
+    planned: true
+    seen: true
+  cg_vps_03:
+    hit: 2
+    total: 2
+    open: []
+    closed: true
+    planned: true
+    seen: true
+  cg_vps_04:
+    hit: 2
+    total: 2
+    open: []
+    closed: true
+    planned: true
+    seen: true
+  cg_vps_05:
+    hit: 1
+    total: 1
+    open: []
+    closed: true
+    planned: true
+    seen: true
+seeds:
+  locked:
+  - 2006682545
+  - 297344680
+  - 856188353
+  - 876683810
+  - 102409445
+  retired: []
+  run:
+  - seed: 2006682545
+    locked: true
+    passed: true
+  - seed: 297344680
+    locked: true
+    passed: true
+  - seed: 856188353
+    locked: true
+    passed: true
+  - seed: 876683810
+    locked: true
+    passed: true
+  - seed: 102409445
+    locked: true
+    passed: true
+  - seed: 720760655
+    locked: false
+    passed: true
+  - seed: 714886736
+    locked: false
+    passed: true
+  - seed: 372251644
+    locked: false
+    passed: true
+  - seed: 52574324
+    locked: false
+    passed: true
+  - seed: 365705702
+    locked: false
+    passed: true
+  - seed: 612566425
+    locked: false
+    passed: true
+  - seed: 411618496
+    locked: false
+    passed: true
+  - seed: 155681570
+    locked: false
+    passed: true
+  - seed: 1069834941
+    locked: false
+    passed: true
+  - seed: 1391930741
+    locked: false
+    passed: true
+  - seed: 1332154828
+    locked: false
+    passed: true
+  - seed: 1081385997
+    locked: false
+    passed: true
+  - seed: 187172375
+    locked: false
+    passed: true
+  - seed: 1813279595
+    locked: false
+    passed: true
+  - seed: 586539141
+    locked: false
+    passed: true
+  - seed: 531080013
+    locked: false
+    passed: true
+  - seed: 1104958861
+    locked: false
+    passed: true
+  - seed: 722993191
+    locked: false
+    passed: true
+  - seed: 14118524
+    locked: false
+    passed: true
+  - seed: 1493749186
+    locked: false
+    passed: true
+  - seed: 426885510
+    locked: false
+    passed: true
+  - seed: 759081723
+    locked: false
+    passed: true
+  - seed: 910884419
+    locked: false
+    passed: true
+  - seed: 1305733189
+    locked: false
+    passed: true
+  - seed: 1647435158
+    locked: false
+    passed: true
+  - seed: 102969846
+    locked: false
+    passed: true
+  - seed: 1731175623
+    locked: false
+    passed: true
+  - seed: 1660184674
+    locked: false
+    passed: true
+  - seed: 299567211
+    locked: false
+    passed: true
+  - seed: 1689615428
+    locked: false
+    passed: true
+  - seed: 1846888336
+    locked: false
+    passed: true
+  - seed: 1682398957
+    locked: false
+    passed: true
+  - seed: 2146686949
+    locked: false
+    passed: true
+  - seed: 1338682557
+    locked: false
+    passed: true
+  - seed: 643401574
+    locked: false
+    passed: true
+  - seed: 1595776581
+    locked: false
+    passed: true
+  - seed: 1593715811
+    locked: false
+    passed: true
+  - seed: 1554799696
+    locked: false
+    passed: true
+  - seed: 1570342540
+    locked: false
+    passed: true
+  - seed: 1187913127
+    locked: false
+    passed: true
+  - seed: 2121314020
+    locked: false
+    passed: true
+  - seed: 61650430
+    locked: false
+    passed: true
+  - seed: 788831701
+    locked: false
+    passed: true
+  - seed: 302386505
+    locked: false
+    passed: true
+  - seed: 2135150444
+    locked: false
+    passed: true
+  - seed: 220809410
+    locked: false
+    passed: true
+  - seed: 798296899
+    locked: false
+    passed: true
+  - seed: 1309392421
+    locked: false
+    passed: true
+  - seed: 939707578
+    locked: false
+    passed: true
+  - seed: 1362283449
+    locked: false
+    passed: true
+  - seed: 679661137
+    locked: false
+    passed: true
+  - seed: 1205509790
+    locked: false
+    passed: true
+  - seed: 81995852
+    locked: false
+    passed: true
+  - seed: 2030160261
+    locked: false
+    passed: true
+  - seed: 1190286906
+    locked: false
+    passed: true
+  file: verif/seeds.yaml
+  triple:
+    tool: verilator 5.032+cocotb 2.1.0
+    harness: aeeba020427620076927903bf04ace7d795be49cbe414371d7b518e81206ec83
+    dut: 4327a461fdb81053850e662195756a834d6939ec1eb65f66f7e747a8b6c5f9ba
+  replay:
+    run: runs/cocotb_sim/counter4d/20261125-161502-5d1d19/report.json@1
+    seed: 2006682545
+    tests:
+      test_vps_01_reset: true
+      test_vps_02_hold: true
+      test_vps_03_increment: true
+      test_vps_04_wrap: true
+      test_vps_05_reset_priority: true
+      test_random_seeded: true
+    mismatches: 0
+    error: ''
+  counted: 60
+  minimum: 50
+  ceiling: 150
+  ceiling_reached: false
+  batches: 1
+convergence:
+  window: 10
+  bins: 8
+  bins_total: 8
+  seeds_before_window: 0
+  bins_before_window: 0
+  converged: true
+  note: every bin is reached or waived
+closure_curve:
+- seeds: 60
+  bins_hit: 8
+  bins_total: 8
+harness:
+  test_module: verif/test_counter4d.py
+  kill_rate: 1.0
+  threshold: 0.8
+  qualified: true
+defects: []
+waivers:
+  approved: []
+  candidates: []
+  rejected: []
+coverage_by_scenario:
+- id: VPS-01
+  status: testable
+  req_ids:
+  - REQ-3.1.1
+  verified: true
+  directed: &id001
+    test: test_vps_01_reset
+    ran: true
+    seeds: 60
+    failed_seeds: []
+    passed: true
+  covergroup:
+    name: cg_vps_01
+    closed: true
+    open: []
+  properties: []
+- id: VPS-02
+  status: testable
+  req_ids:
+  - REQ-3.1.4
+  verified: true
+  directed: &id002
+    test: test_vps_02_hold
+    ran: true
+    seeds: 60
+    failed_seeds: []
+    passed: true
+  covergroup:
+    name: cg_vps_02
+    closed: true
+    open: []
+  properties: []
+- id: VPS-03
+  status: testable
+  req_ids:
+  - REQ-3.1.2
+  - REQ-3.1.6
+  verified: true
+  directed: &id003
+    test: test_vps_03_increment
+    ran: true
+    seeds: 60
+    failed_seeds: []
+    passed: true
+  covergroup:
+    name: cg_vps_03
+    closed: true
+    open: []
+  properties: []
+- id: VPS-04
+  status: testable
+  req_ids:
+  - REQ-3.1.3
+  verified: true
+  directed: &id004
+    test: test_vps_04_wrap
+    ran: true
+    seeds: 60
+    failed_seeds: []
+    passed: true
+  covergroup:
+    name: cg_vps_04
+    closed: true
+    open: []
+  properties: []
+- id: VPS-05
+  status: testable
+  req_ids:
+  - REQ-3.1.5
+  verified: true
+  directed: &id005
+    test: test_vps_05_reset_priority
+    ran: true
+    seeds: 60
+    failed_seeds: []
+    passed: true
+  covergroup:
+    name: cg_vps_05
+    closed: true
+    open: []
+  properties: []
+formal: null
+waiver_log: []
+versions:
+  recipe: verify-block
+  reports:
+    cocotb_sim:
+      tool: cocotb_sim
+      schema_version: 2
+      tool_version: 2.1.0
+    cocotb_sim_icarus: null
+    mutate_rtl:
+      tool: mutate_rtl
+      schema_version: 1
+      tool_version: null
+    formal_check: null
+    tb_lint:
+      tool: tb_lint
+      schema_version: 2
+      tool_version: null
+annotations:
+  seun:
+    open_p2_p3: []
+  tola:
+    directed:
+    - *id001
+    - *id002
+    - *id003
+    - *id004
+    - *id005
+    locked_seeds:
+    - 2006682545
+    - 297344680
+    - 856188353
+    - 876683810
+    - 102409445
+    locked_seeds_run:
+    - 102409445
+    - 297344680
+    - 856188353
+    - 876683810
+    - 2006682545
+    reset_x_checks:
+      ran: false
+      simulator: icarus
+      passed: false
+      failures: []
+  ngozi:
+    summary: 'counter4d: ready for sign-off; 6 of 6 requirements verified, 5 of 5
+      scenarios closed, 0 open P2/P3 defect(s)'
+verified:
+  REQ-3.1.1: true
+  REQ-3.1.2: true
+  REQ-3.1.3: true
+  REQ-3.1.4: true
+  REQ-3.1.5: true
+  REQ-3.1.6: true
+unverified: {}
+known_failures: {}
+challenges_raised: []
+review:
+  file: verif/review/counter4d.yaml
+  rules:
+  - rule: DAYO-TBS-051
+    status: pass
+    finding: no IDD signal is marked cdc and clocks.yaml has no crossing, so no synchroniser
+      latency is drawn
+    location: verif/test_counter4d.py:1
+  findings: 0
+  not_reviewed:
+  - DAYO-TBS-003
+  - DAYO-TBS-006
+  - DAYO-TBS-016
+  - DAYO-TBS-020
+  - DAYO-TBS-021
+  - DAYO-TBS-024
+  - DAYO-TBS-035
+  - DAYO-TBS-042
+rtm_delta: verif/handoffs/rtm_delta/counter4d.yaml
+reports:
+  cocotb_sim:
+    kind: sim
+    tool: cocotb_sim
+    block: counter4d
+    path: runs/cocotb_sim/counter4d/20261125-161502-5d1d19/report.json
+    version: 1
+    file_id: 8bee0c91-a529-4863-a6ff-e547083b1dcb
+    stale: false
+  mutate_rtl:
+    kind: mutation
+    tool: mutate_rtl
+    block: counter4d
+    path: runs/mutate_rtl/counter4d/20261125-161308-8960e7/report.json
+    version: 1
+    file_id: 158734da-d3cf-444a-8575-48b8dcab4328
+    stale: false
+  formal_check: null
+  tb_lint:
+    kind: lint
+    tool: tb_lint
+    block: counter4d
+    path: runs/tb_lint/counter4d/20261125-161253-2ecffa/report.json
+    version: 1
+    file_id: 10ff39ce-658c-4863-8e5d-9fbb6a806cc7
+    stale: false

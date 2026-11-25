@@ -1,0 +1,32 @@
+version: 1
+harnesses:
+  verif/test_counter4d.py:
+    tool: verilator 5.032+cocotb 2.1.0
+    harness_sha256: aeeba020427620076927903bf04ace7d795be49cbe414371d7b518e81206ec83
+    dut_sha256: 4327a461fdb81053850e662195756a834d6939ec1eb65f66f7e747a8b6c5f9ba
+    kind: dev
+    locked:
+    - seed: 2006682545
+      reason: 'initial: the harness''s locked set (D-2)'
+    - seed: 297344680
+      reason: 'initial: the harness''s locked set (D-2)'
+    - seed: 856188353
+      reason: 'initial: the harness''s locked set (D-2)'
+    - seed: 876683810
+      reason: 'initial: the harness''s locked set (D-2)'
+    - seed: 102409445
+      reason: 'initial: the harness''s locked set (D-2)'
+    last_random: 1190286906
+    relocked:
+    - changed:
+      - harness
+      from:
+        tool: verilator 5.032+cocotb 2.1.0
+        harness: fd0c4ead55eb6d1579254c014c66165adf70a3db17c66ea8811de37163f0d3ad
+        dut: 4327a461fdb81053850e662195756a834d6939ec1eb65f66f7e747a8b6c5f9ba
+      seeds:
+      - 2006682545
+      - 297344680
+      - 856188353
+      - 876683810
+      - 102409445
